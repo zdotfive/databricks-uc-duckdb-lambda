@@ -5,6 +5,7 @@ from aws_cdk import (
     aws_lambda as lambda_,
     aws_iam as iam,
     aws_ssm as ssm,
+    aws_apigateway as apigw,
     Duration,
     Stack,
 )
@@ -91,7 +92,59 @@ class UcReaderStack(Stack):
         token_param.grant_read(fn)
 
         # ---------------------------------------------------------------------------
-        # Output ARN
+        # REST API Gateway con cache
         # ---------------------------------------------------------------------------
-        cdk.CfnOutput(self, "FunctionArn", value=fn.function_arn)
+        api = apigw.RestApi(
+            self,
+            "UcReaderApi",
+            rest_api_name="uc-reader-api",
+            description="Query Databricks Unity Catalog tables via DuckDB",
+            deploy_options=apigw.StageOptions(
+                stage_name="prod",
+                # Cache: 0.5 GB, TTL 60s — evita di invocare Lambda per query identiche
+                caching_enabled=True,
+                cache_cluster_size="0.5",
+                cache_ttl=Duration.seconds(60),
+                # Throttling di default
+                throttling_rate_limit=50,
+                throttling_burst_limit=100,
+                # Log livello minimal
+                metrics_enabled=True,
+            ),
+        )
+
+        # Integrazione Lambda proxy
+        lambda_integration = apigw.LambdaIntegration(
+            fn,
+            proxy=True,
+            cache_key_parameters=[
+                "method.request.querystring.table",
+                "method.request.querystring.filters",
+                "method.request.querystring.limit",
+            ],
+        )
+
+        # GET /query
+        query_resource = api.root.add_resource("query")
+        query_resource.add_method(
+            "GET",
+            lambda_integration,
+            request_parameters={
+                "method.request.querystring.table":   True,   # obbligatorio
+                "method.request.querystring.filters": False,  # opzionale
+                "method.request.querystring.limit":   False,  # opzionale
+            },
+            request_validator=apigw.RequestValidator(
+                self,
+                "QueryValidator",
+                rest_api=api,
+                validate_request_parameters=True,
+            ),
+        )
+
+        # ---------------------------------------------------------------------------
+        # Output
+        # ---------------------------------------------------------------------------
+        cdk.CfnOutput(self, "FunctionArn",  value=fn.function_arn)
         cdk.CfnOutput(self, "FunctionName", value=fn.function_name)
+        cdk.CfnOutput(self, "ApiUrl",       value=f"{api.url}query")

@@ -123,32 +123,42 @@ def read_uc_table(
 # AWS Lambda handler
 # ---------------------------------------------------------------------------
 
+def _parse_event(event: dict) -> tuple[str | None, str | None, int]:
+    """Supporta invocazione diretta e API Gateway REST proxy."""
+    if "queryStringParameters" in event:
+        qs      = event.get("queryStringParameters") or {}
+        table   = qs.get("table")
+        filters = qs.get("filters")
+        limit   = int(qs.get("limit", 100))
+    else:
+        table   = event.get("table")
+        filters = event.get("filters")
+        limit   = int(event.get("limit", 100))
+    return table, filters, limit
+
+
 def handler(event: dict, context) -> dict:
     """
-    Lambda handler.
+    Lambda handler — invocazione diretta e API Gateway REST proxy.
 
-    Event payload
-    -------------
-    {
-        "table":   "catalog.schema.table",  # obbligatorio (o env DEFAULT_TABLE)
-        "filters": "age = 30",              # opzionale
-        "limit":   100                      # opzionale
-    }
+    API Gateway:  GET /query?table=catalog.schema.table&filters=col=val&limit=10
+    Diretto:      {"table": "catalog.schema.table", "filters": "col=val", "limit": 10}
     """
-    table = event.get("table") or os.environ.get("DEFAULT_TABLE")
+    table, filters, limit = _parse_event(event)
+    table = table or os.environ.get("DEFAULT_TABLE")
+
     if not table:
         return {
             "statusCode": 400,
-            "body": json.dumps({"error": "Missing 'table' in event or DEFAULT_TABLE env var"}),
+            "body": json.dumps({"error": "Missing 'table' parameter"}),
+            "headers": {"Content-Type": "application/json"},
         }
-
-    filters = event.get("filters")
-    limit   = int(event.get("limit", 100))
 
     try:
         arrow_table = read_uc_table(table, filters=filters, limit=limit)
         return {
             "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
             "body": json.dumps(
                 {
                     "table":   table,
@@ -162,5 +172,6 @@ def handler(event: dict, context) -> dict:
     except Exception as exc:
         return {
             "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
             "body": json.dumps({"error": str(exc)}),
         }
