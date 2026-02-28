@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtualenv
+.venv/
+infra/.venv/
+
+# CDK
+cdk.out/
+infra/cdk.out/
+
+# Lambda layer build output
+infra/lambda_layer/dist/
+
+# Test temporanei
+/tmp/
+
+# Secrets / config locali
+.env
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+.claude/
+
+.mcp.json
