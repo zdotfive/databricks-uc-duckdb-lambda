@@ -195,9 +195,9 @@ Links will be added as each article is published.
 
 | # | Title | Link |
 |---|---|---|
-| 1 | Query Databricks Unity Catalog from AWS Lambda with DuckDB | _coming soon_ |
-| 2 | Performance tuning: AWS Lambda Power Tuning + API Gateway cache | _coming soon_ |
-| 3 | DuckDB meets Iceberg REST Catalog: what works, what doesn't (yet) | _coming soon_ |
+| 1 | DuckDB + Databricks Unity Catalog: the extension doesn't work. Here's what does. | _coming soon_ |
+| 2 | DuckDB + Unity Catalog inside AWS Lambda: a serverless query engine for $0.001 per query | _coming soon_ |
+| 3 | The crazy idea: a REST API on top of DuckDB + Unity Catalog. It works. | _coming soon_ |
 
 ---
 
