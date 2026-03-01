@@ -195,7 +195,7 @@ Links will be added as each article is published.
 
 | # | Title | Link |
 |---|---|---|
-| 1 | DuckDB + Databricks Unity Catalog: the extension doesn't work. Here's what does. | _coming soon_ |
+| 1 | DuckDB + Databricks Unity Catalog: the extension doesn't work. Here's what does. | https://www.linkedin.com/pulse/part-1-3-duckdb-databricks-unity-catalog-building-serverless-arena-y2pnf |
 | 2 | DuckDB + Unity Catalog inside AWS Lambda: a serverless query engine for $0.001 per query | _coming soon_ |
 | 3 | The crazy idea: a REST API on top of DuckDB + Unity Catalog. It works. | _coming soon_ |
 
