@@ -19,7 +19,6 @@ infra/lambda_layer/dist/
 
 # Secrets / config locali
 .env
-.claude/settings.local.json
 
 # Script locali con valori reali (non pubblicare)
 *.local.sh
