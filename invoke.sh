@@ -6,10 +6,10 @@
 
 set -euo pipefail
 
-FUNCTION_NAME="UcReaderStack-UcReaderFunction56CA7D68-aqROHbFjfzj4"
-AWS_PROFILE="${AWS_PROFILE:-mylabs}"
+FUNCTION_NAME="${FUNCTION_NAME:-<your-lambda-function-name>}"
+AWS_PROFILE="${AWS_PROFILE:-default}"
 AWS_REGION="${AWS_REGION:-eu-central-1}"
-TABLE="${TABLE:-labs.duckdb_uc_test.first_table_iceberg}"
+TABLE="${TABLE:-catalog.schema.table}"
 FILTERS="${FILTERS:-}"
 LIMIT="${LIMIT:-10}"
 OUTPUT="/tmp/lambda_response.json"

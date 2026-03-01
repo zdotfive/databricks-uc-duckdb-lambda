@@ -21,6 +21,10 @@ infra/lambda_layer/dist/
 .env
 .claude/settings.local.json
 
+# Script locali con valori reali (non pubblicare)
+*.local.sh
+local_test.py
+
 # macOS
 .DS_Store
 

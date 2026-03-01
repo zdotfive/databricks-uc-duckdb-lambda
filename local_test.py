@@ -41,7 +41,7 @@ def local_test(table: str, filters: str | None = None, limit: int = 10) -> None:
 
 if __name__ == "__main__":
     local_test(
-        table="labs.duckdb_uc_test.first_table_iceberg",
-        filters="age = 30",
+        table="catalog.schema.table",
+        filters=None,
         limit=10,
     )

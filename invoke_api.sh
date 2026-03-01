@@ -6,8 +6,8 @@
 
 set -euo pipefail
 
-API_URL="https://o2145qbqdf.execute-api.eu-central-1.amazonaws.com/prod/query"
-TABLE="${TABLE:-labs.duckdb_uc_test.sales_customers}"
+API_URL="${API_URL:-https://<api-id>.execute-api.<region>.amazonaws.com/prod/query}"
+TABLE="${TABLE:-catalog.schema.table}"
 FILTERS="${FILTERS:-}"
 LIMIT="${LIMIT:-10}"
 
